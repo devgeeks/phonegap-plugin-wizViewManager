@@ -15,7 +15,7 @@
 
 static CDVPlugin* viewManager;
 
-- (UIWebView *)createNewInstanceViewFromManager:(CDVPlugin *)myViewManager newBounds:(CGRect)webViewBounds sourceToLoad:(NSString *)src {
+- (UIWebView *)createNewInstanceViewFromManager:(CDVPlugin *)myViewManager newBounds:(CGRect)webViewBounds sourceToLoad:(NSString *)src withOptions:(NSDictionary *)options {
     
     viewManager = myViewManager;
     
@@ -68,8 +68,7 @@ static CDVPlugin* viewManager;
         NSString *newHTMLString = [[NSString alloc] initWithContentsOfFile: fileString encoding: NSUTF8StringEncoding error: NULL];
         
         NSURL *newURL = [[NSURL alloc] initFileURLWithPath: fileString];
-        
-        [wizView loadHTMLString: newHTMLString baseURL: newURL];
+        [wizView loadRequest:[NSMutableURLRequest requestWithURL:newURL]];
         
         [newHTMLString release];
         [newURL release];                    
@@ -117,7 +116,7 @@ static CDVPlugin* viewManager;
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)theWebView {
-	// view is loaded
+    // view is loaded
     NSLog(@"[WizWebView] ******* view is LOADED! " );
 
     // to send data straight to mainView onLoaded via phonegap callback

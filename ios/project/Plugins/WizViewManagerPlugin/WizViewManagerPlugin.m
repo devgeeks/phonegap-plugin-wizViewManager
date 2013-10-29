@@ -12,6 +12,9 @@
 
 #import <Cordova/CDVViewController.h>
 
+#define SCREEN_WIDTH ((([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationPortrait) || ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationPortraitUpsideDown)) ? [[UIScreen mainScreen] bounds].size.width : [[UIScreen mainScreen] bounds].size.height)
+#define SCREEN_HEIGHT ((([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationPortrait) || ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationPortraitUpsideDown)) ? [[UIScreen mainScreen] bounds].size.height : [[UIScreen mainScreen] bounds].size.width)
+
 @implementation WizViewManagerPlugin
 
 @synthesize showViewCallbackId, hideViewCallbackId, webviewDelegate, canvasView;
@@ -585,11 +588,6 @@ static WizViewManagerPlugin *wizViewManagerInstance = NULL;
 
 - (CGRect)frameWithOptions:(NSDictionary *)options {
 
-    // Get Device width and height
-    CGRect screenRect = [[UIScreen mainScreen] bounds];
-    int screenHeight = (int) screenRect.size.height;
-    int screenWidth = (int) screenRect.size.width;
-    
     // Define vars
     int top;
     int left;
@@ -605,7 +603,7 @@ static WizViewManagerPlugin *wizViewManagerInstance = NULL;
             // backward compatibility
             top = [self getWeakLinker:[options objectForKey:@"y"] ofType:@"top"];
         } else if ([options objectForKey:@"height"] && [options objectForKey:@"bottom"]) {
-            top = screenHeight - [self getWeakLinker:[options objectForKey:@"bottom"] ofType:@"bottom"]
+            top = SCREEN_HEIGHT - [self getWeakLinker:[options objectForKey:@"bottom"] ofType:@"bottom"]
             - [self getWeakLinker:[options objectForKey:@"height"] ofType:@"height"];
         } else {
             top = 0;
@@ -618,7 +616,7 @@ static WizViewManagerPlugin *wizViewManagerInstance = NULL;
             // backward compatibility
             left = [self getWeakLinker:[options objectForKey:@"x"] ofType:@"left"];
         } else if ([options objectForKey:@"width"] && [options objectForKey:@"right"]) {
-            left = screenWidth - [self getWeakLinker:[options objectForKey:@"right"] ofType:@"right"]
+            left = SCREEN_WIDTH - [self getWeakLinker:[options objectForKey:@"right"] ofType:@"right"]
             - [self getWeakLinker:[options objectForKey:@"width"] ofType:@"width"];
         } else {
             left = 0;
@@ -628,26 +626,26 @@ static WizViewManagerPlugin *wizViewManagerInstance = NULL;
         if ([options objectForKey:@"height"]) {
             height = [self getWeakLinker:[options objectForKey:@"height"] ofType:@"height"];
         } else if ([options objectForKey:@"bottom"]) {
-            height = screenHeight - [self getWeakLinker:[options objectForKey:@"bottom"] ofType:@"bottom"] - top;
+            height = SCREEN_HEIGHT - [self getWeakLinker:[options objectForKey:@"bottom"] ofType:@"bottom"] - top;
         } else {
-            height = screenHeight;
+            height = SCREEN_HEIGHT;
         }
         // NSLog(@"HEIGHT: %i", height);
         
         if ([options objectForKey:@"width"]) {
             width = [self getWeakLinker:[options objectForKey:@"width"] ofType:@"width"];
         } else if ([options objectForKey:@"right"]) {
-            width = screenWidth - [self getWeakLinker:[options objectForKey:@"right"] ofType:@"right"] - left;
+            width = SCREEN_WIDTH - [self getWeakLinker:[options objectForKey:@"right"] ofType:@"right"] - left;
         } else {
-            width = screenWidth;
+            width = SCREEN_WIDTH;
         }
         // NSLog(@"WIDTH: %i", width);
     } else {
         // Defaults to full screen fill
         top = 0;
         left = 0;
-        height = screenHeight;
-        width = screenWidth;
+        height = SCREEN_HEIGHT;
+        width = SCREEN_WIDTH;
         // NSLog(@"TOP: 0\nLEFT: 0\nHEIGHT: %i\nWIDTH: %i", height, width);
     }
     
